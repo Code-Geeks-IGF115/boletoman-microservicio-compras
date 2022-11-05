@@ -23,6 +23,10 @@ class DetalleCompra
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2)]
     private ?string $total = null;
 
+    #[ORM\ManyToOne(inversedBy: 'detalleCompras')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Compra $compra = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -60,6 +64,18 @@ class DetalleCompra
     public function setTotal(string $total): self
     {
         $this->total = $total;
+
+        return $this;
+    }
+
+    public function getCompra(): ?Compra
+    {
+        return $this->compra;
+    }
+
+    public function setCompra(?Compra $compra): self
+    {
+        $this->compra = $compra;
 
         return $this;
     }

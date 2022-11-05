@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Descuento index{% endblock %}
+
+{% block body %}
+    <h1>Descuento index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Codigo</th>
+                <th>Descripcion</th>
+                <th>Monto</th>
+                <th>CantidadButacas</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for descuento in descuentos %}
+            <tr>
+                <td>{{ descuento.id }}</td>
+                <td>{{ descuento.codigo }}</td>
+                <td>{{ descuento.descripcion }}</td>
+                <td>{{ descuento.monto }}</td>
+                <td>{{ descuento.cantidadButacas }}</td>
+                <td>
+                    <a href="{{ path('app_descuento_show', {'id': descuento.id}) }}">show</a>
+                    <a href="{{ path('app_descuento_edit', {'id': descuento.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_descuento_new') }}">Create new</a>
+{% endblock %}

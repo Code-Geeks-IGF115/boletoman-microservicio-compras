@@ -27,6 +27,14 @@ class DetalleCompra
     #[ORM\JoinColumn(nullable: false)]
     private ?Compra $compra = null;
 
+    public function __construct(array $parametrosarray)
+    {
+        $this->setDescripcion($parametrosarray['descripcion']);
+        $this->setCantidad($parametrosarray['cantidad']);
+        $this->setTotal($parametrosarray['total']);
+        $this->setCompra($parametrosarray['compra']);
+    }
+
     public function getId(): ?int
     {
         return $this->id;

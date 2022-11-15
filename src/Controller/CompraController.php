@@ -37,9 +37,9 @@ class CompraController extends AbstractController
         ]);
     }
 
-    #[Route('/{idCategoria}/{idEvento}/new', name: 'app_compra_new', methods: ['POST'])]
+    #[Route('/new', name: 'app_compra_new', methods: ['POST'])]
     public function new(Request $request, CompraRepository $compraRepository, 
-    DetalleCompraRepository $detalleCompraRepository,$idCategoria,$idEvento): JsonResponse
+    DetalleCompraRepository $detalleCompraRepository): JsonResponse
     {
 
         $parametros = $request->toArray();

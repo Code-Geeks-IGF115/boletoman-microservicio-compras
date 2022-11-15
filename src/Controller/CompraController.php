@@ -34,9 +34,9 @@ class CompraController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_compra_new', methods: ['POST'])]
+    #[Route('/{idCategoria}/{idEvento}/new', name: 'app_compra_new', methods: ['POST'])]
     public function new(Request $request, CompraRepository $compraRepository, 
-    DetalleCompraRepository $detalleCompraRepository): JsonResponse
+    DetalleCompraRepository $detalleCompraRepository,$idCategoria,$idEvento): JsonResponse
     {
 
         $parametros = $request->toArray();
@@ -48,14 +48,17 @@ class CompraController extends AbstractController
         //dd($parametros);                 
         $parametrosarray = $parametros['detalleCompra'];
         if (/*$form->isSubmitted() && */ $form->isValid()) {
-            $compraRepository->save($compra, true);
+            
+            $compraRepository->save($compra, true);    //quitar barras despues
             foreach ($parametrosarray as $detalleComprasss) {
+
                 $detalleComprasss['compra']=$compra;
                 $detalleCompra = new DetalleCompra($detalleComprasss);
+                //$detalleCompra->setDescripcion(strval("Butacas Categoria: " . $idCategoria . "     Evento: " . $idEvento));
                 //$compra->addDetalleCompra($detalleCompra);
-                $detalleCompraRepository->save($detalleCompra, true);
-                //dd($detalleComprasss);
-            }
+                $detalleCompraRepository->save($detalleCompra, true); //quitar barras despues
+                //dd($detalleComprasss);      //poner barras despues
+            } //consultar microservicio reservacion para poner datos de descripcion
             return $this->responseHelper->responseDatos(["message"=>"La compra ha sido guardada correctamente."]);
                     }
         else{

@@ -33,6 +33,7 @@ class DetalleCompra
         $this->setCantidad($parametrosarray['cantidad']);
         $this->setTotal($parametrosarray['total']);
         $this->setCompra($parametrosarray['compra']);
+        
     }
 
     public function getId(): ?int

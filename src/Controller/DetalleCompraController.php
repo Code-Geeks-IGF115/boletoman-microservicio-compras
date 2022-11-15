@@ -41,7 +41,7 @@ class DetalleCompraController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $detalleCompraRepository->save($detalleCompra, true);
-
+            
             return $this->redirectToRoute('app_detalle_compra_index', [], Response::HTTP_SEE_OTHER);
         }
 

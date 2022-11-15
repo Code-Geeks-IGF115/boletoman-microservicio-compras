@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
-use App\Entity\Compra;
-use App\Entity\DetalleCompra;
+
+use App\Entity\{Compra, DetalleCompra};
+
 use App\Form\CompraType;
 use App\Repository\CompraRepository;
+use App\Service\ResponseHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\{Response, JsonResponse};
@@ -18,12 +20,14 @@ use Nelmio\CorsBundle;
 #[Route('/compra')]
 class CompraController extends AbstractController
 {
-    private ResponseHelper $responseHelper;
 
+
+    private ResponseHelper $responseHelper;
 
     public function __construct(ResponseHelper $responseHelper)
     {
-        $this->responseHelper = $responseHelper;
+        $this->responseHelper=$responseHelper;
+
     }
 
     #[Route('/', name: 'app_compra_index', methods: ['GET'])]
@@ -86,12 +90,16 @@ class CompraController extends AbstractController
         ]);*/
     }
 
+   
     #[Route('/{id}', name: 'app_compra_show', methods: ['GET'])]
-    public function show(Compra $compra): Response
+    public function show(Compra $compra = NULL): Response
     {
-        return $this->render('compra/show.html.twig', [
-            'compra' => $compra,
-        ]);
+        if(!$compra){
+            return $this->responseHelper->responseMessage("No existe dicha compra");
+        }else{
+            return $this->responseHelper->responseDatos(['Compra' => $compra],['ver_compra']);
+        }
+        
     }
 
     #[Route('/{id}/edit', name: 'app_compra_edit', methods: ['GET', 'POST'])]

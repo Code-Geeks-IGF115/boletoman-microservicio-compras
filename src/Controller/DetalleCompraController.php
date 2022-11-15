@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+
+
 use App\Entity\DetalleCompra;
 use App\Form\DetalleCompraType;
 use App\Repository\DetalleCompraRepository;
@@ -9,10 +11,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\ResponseHelper;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 #[Route('/detalle/compra')]
 class DetalleCompraController extends AbstractController
 {
+    private ResponseHelper $responseHelper;
+
+    public function __construct(ResponseHelper $responseHelper)
+    {
+        $this->responseHelper=$responseHelper;
+    }
+
     #[Route('/', name: 'app_detalle_compra_index', methods: ['GET'])]
     public function index(DetalleCompraRepository $detalleCompraRepository): Response
     {
@@ -41,11 +52,14 @@ class DetalleCompraController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_detalle_compra_show', methods: ['GET'])]
-    public function show(DetalleCompra $detalleCompra): Response
+    public function show(DetalleCompra $detalleCompra = NULL): JsonResponse
     {
-        return $this->render('detalle_compra/show.html.twig', [
-            'detalle_compra' => $detalleCompra,
-        ]);
+        if(!$detalleCompra){
+            return $this->responseHelper->responseMessage("No existe dicha compra");
+        }else{
+            return $this->responseHelper->responseDatos(['detalleCompra' => $detalleCompra],['ver_detallecompra']);
+        }
+        
     }
 
     #[Route('/{id}/edit', name: 'app_detalle_compra_edit', methods: ['GET', 'POST'])]

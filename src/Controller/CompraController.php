@@ -14,6 +14,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use App\Repository\DetalleCompraRepository;
 use App\Service\ResponseHelper;
+use Exception;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Nelmio\CorsBundle;
 
 #[Route('/compra')]
@@ -22,11 +24,12 @@ class CompraController extends AbstractController
 
 
     private ResponseHelper $responseHelper;
+    private $client;
 
-    public function __construct(ResponseHelper $responseHelper)
+    public function __construct(ResponseHelper $responseHelper,HttpClientInterface $client)
     {
         $this->responseHelper=$responseHelper;
-
+        $this->client = $client;
     }
 
     #[Route('/', name: 'app_compra_index', methods: ['GET'])]
@@ -127,5 +130,30 @@ class CompraController extends AbstractController
         }
 
         return $this->redirectToRoute('app_compra_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/ejemplo/cliente', name: 'ejemplo_cliente', methods: ['POST'])]
+    public function ejemploCliente(Request $request): JsonResponse
+    {
+        $mensaje="Hola Mundo!";
+        
+        try{
+            // recibiendo parametros
+            $parametros=$request->toArray(); 
+            $miNombre=$parametros["nombreCompleto"];
+            // contruyendo cliente - AGREGACIÓN
+            $response = $this->client->request(
+                'POST', 
+                'https://boletoman-reservaciones.herokuapp.com/sala/de/eventos/ejemplo/servidor', [
+                // defining data using an array of parameters
+                'json' => ['miNombre' => $miNombre],
+            ]);
+            $resultadosDeConsulta=$response->toArray();
+            $mensaje=$resultadosDeConsulta["message"];
+        }catch(Exception $e){
+            return $this->responseHelper->responseDatosNoValidos($e->getMessage());  
+        }
+
+        return $this->responseHelper->responseMessage($mensaje);     
     }
 }

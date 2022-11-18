@@ -139,9 +139,10 @@ class CompraController extends AbstractController
         
         try{
             // recibiendo parametros
+            //SOY SERVIDOR
             $parametros=$request->toArray(); 
             $miNombre=$parametros["nombreCompleto"];
-            // contruyendo cliente - AGREGACIÓN
+            // contruyendo cliente - AGREGACIÓN - TAMBIÉN SOY CLIENTE
             $response = $this->client->request(
                 'POST', 
                 'https://boletoman-reservaciones.herokuapp.com/sala/de/eventos/ejemplo/servidor', [
@@ -151,7 +152,7 @@ class CompraController extends AbstractController
             $resultadosDeConsulta=$response->toArray();
             $mensaje=$resultadosDeConsulta["message"];
         }catch(Exception $e){
-            return $this->responseHelper->responseDatosNoValidos($e->getMessage());  
+            return $this->responseHelper->responseDatosNoValidos($mensaje);  
         }
 
         return $this->responseHelper->responseMessage($mensaje);     

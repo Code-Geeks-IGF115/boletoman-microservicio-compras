@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\DetalleCompraRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 #[ORM\Entity(repositoryClass: DetalleCompraRepository::class)]
 class DetalleCompra
@@ -13,19 +15,31 @@ class DetalleCompra
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
+    
+    #[Groups(['ver_detallecompra','ver_compra'])]
     #[ORM\Column]
     private ?int $cantidad = null;
 
-    #[ORM\Column(length: 100)]
-    private ?string $descripcion = null;
-
+    #[Groups(['ver_detallecompra','ver_compra'])]
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2)]
     private ?string $total = null;
+
+    #[Groups(['ver_detallecompra','ver_compra'])]
+    #[ORM\Column(length: 100)]
+    private ?string $descripcion = null;
 
     #[ORM\ManyToOne(inversedBy: 'detalleCompras')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Compra $compra = null;
+
+    public function __construct(array $parametrosarray)
+    {
+        $this->setDescripcion($parametrosarray['descripcion']);
+        $this->setCantidad($parametrosarray['cantidad']);
+        $this->setTotal($parametrosarray['total']);
+        $this->setCompra($parametrosarray['compra']);
+        
+    }
 
     public function getId(): ?int
     {

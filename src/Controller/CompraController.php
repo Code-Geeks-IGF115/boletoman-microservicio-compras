@@ -157,4 +157,26 @@ class CompraController extends AbstractController
 
         return $this->responseHelper->responseMessage($mensaje);     
     }
+
+   
+    //recibiendo de microservicio reservaciones.
+    #[Route('/misservicios/{idUsuario}', name: 'consulta_idUsuario', methods: ['GET'])]
+    public function misservicios($idUsuario, DetalleCompraRepository $detalleCompraRepository): JsonResponse
+    {
+        $idCompras=$detalleCompraRepository->findByUsuario($idUsuario);
+
+        foreach($idCompras as $idCompra){
+            $data[]=[
+            'idDetalleCompra'=>$idCompras["idDetalleCompra"],
+            ];
+        }
+        $result=$this->responseHelper->responseDatos($data);
+        return result;
+        
+        
+
+            
+    }
+
+
 }

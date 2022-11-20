@@ -181,6 +181,6 @@ class CompraController extends AbstractController
             return $this->responseHelper->responseDatosNoValidos($mensaje);  
         }*/
 
-        return $this->responseHelper->responseMessage("si funciona");     
+        return $this->responseHelper->responseDatos($compras, ['ver_boletos']);     
     }
 }

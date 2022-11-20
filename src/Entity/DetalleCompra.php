@@ -16,11 +16,11 @@ class DetalleCompra
     #[ORM\Column]
     private ?int $id = null;
     
-    #[Groups(['ver_detallecompra','ver_compra'])]
+    #[Groups(['ver_detallecompra','ver_compra', 'ver_boletos'])]
     #[ORM\Column]
     private ?int $cantidad = null;
 
-    #[Groups(['ver_detallecompra','ver_compra'])]
+    #[Groups(['ver_detallecompra','ver_compra', 'ver_boletos'])]
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2)]
     private ?string $total = null;
 
@@ -28,16 +28,18 @@ class DetalleCompra
     #[ORM\Column(length: 100)]
     private ?string $descripcion = null;
 
+    
     #[ORM\ManyToOne(inversedBy: 'detalleCompras')]
+    #[Groups(['ver_boletos'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Compra $compra = null;
 
-    public function __construct(array $parametrosarray)
+    public function __construct()
     {
-        $this->setDescripcion($parametrosarray['descripcion']);
+        /*$this->setDescripcion($parametrosarray['descripcion']);
         $this->setCantidad($parametrosarray['cantidad']);
         $this->setTotal($parametrosarray['total']);
-        $this->setCompra($parametrosarray['compra']);
+        $this->setCompra($parametrosarray['compra']);*/
         
     }
 

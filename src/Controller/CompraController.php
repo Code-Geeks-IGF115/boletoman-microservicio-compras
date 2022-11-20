@@ -155,7 +155,7 @@ class CompraController extends AbstractController
         return $this->responseHelper->responseMessage($mensaje);     
     }
 
-    #[Route('/{idCompra}/boletos/pdf', name: 'boletos_cliente', methods: ['GET', 'POST'])]
+    #[Route('/{idCompra}/boletos/pdf', name: 'boletos_cliente', methods: ['POST'])]
     public function boletos(DetalleCompraRepository $detalleCompraRepository,
     $idCompra): JsonResponse
     {
@@ -181,6 +181,6 @@ class CompraController extends AbstractController
             return $this->responseHelper->responseDatosNoValidos($mensaje);  
         }*/
 
-        return $this->responseHelper->responseDatos("si funciona");     
+        return $this->responseHelper->responseMessage("si funciona");     
     }
 }

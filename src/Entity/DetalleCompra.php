@@ -11,6 +11,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: DetalleCompraRepository::class)]
 class DetalleCompra
 {
+    #[Groups(['mis_eventos'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -28,6 +29,7 @@ class DetalleCompra
     #[ORM\Column(length: 100)]
     private ?string $descripcion = null;
 
+    // #[Groups(['mis_eventos'])]
     #[ORM\ManyToOne(inversedBy: 'detalleCompras')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Compra $compra = null;

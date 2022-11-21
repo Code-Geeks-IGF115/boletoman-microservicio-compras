@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 
-
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use App\Entity\DetalleCompra;
 use App\Form\DetalleCompraType;
 use App\Repository\DetalleCompraRepository;
@@ -12,16 +12,20 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\ResponseHelper;
+use PhpParser\Node\Stmt\TryCatch;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Exception;
 
 #[Route('/detalle/compra')]
 class DetalleCompraController extends AbstractController
 {
     private ResponseHelper $responseHelper;
+    private $client;
 
-    public function __construct(ResponseHelper $responseHelper)
+    public function __construct(ResponseHelper $responseHelper, HttpClientInterface $client)
     {
         $this->responseHelper=$responseHelper;
+        $this->client = $client;
     }
 
     #[Route('/', name: 'app_detalle_compra_index', methods: ['GET'])]
@@ -88,5 +92,42 @@ class DetalleCompraController extends AbstractController
         }
 
         return $this->redirectToRoute('app_detalle_compra_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/imprimirasistentes/{idEvento}', name: 'app_detalle_compra_imprimir', methods: ['GET'])]
+    public function imprimirAsistentes(Request $request, $idEvento): JsonResponse
+    {
+        $mensaje="Hola, bienvenido";
+        try 
+        {
+            //$estado="Bloqueado";
+            //$parametros = $request->toArray();
+            //$butacasIDs=$parametros["butacas"];
+            //Pt1
+            $response = $this->client->request(
+                'POST',
+                'https://boletoman-reservaciones.herokuapp.com/disponibilidad/butacas/de/evento/'. $idEvento .'/pdf'
+                        //[ /*'json' => ['' =>],*/   ]);
+                //['disponibilidad'=>$disponibilidadDeButaca]
+            );
+                $resultadosDeConsulta=$response->toArray();
+                foreach($resultadosDeConsulta as $resultadxs)
+                {
+                    $codigo=$resultadxs["codigoButaca"];
+                    $categoriaButaca=$resultadxs["nombre"];
+                    $idDetalleCompra=$resultadxs["idDetalleCompra"];
+                }
+                $datos=[
+                    $codigo,$categoriaButaca,$idDetalleCompra
+                ];
+                return $this->responseHelper->responseDatos($datos);
+
+            //Retornar codigo butaca, categoria butaca y el id detallecompra
+        } 
+        catch (Exception $e) 
+        {
+            return $this->responseHelper->responseDatosNoValidos($e->getMessage());
+        }    
+        return $this->responseHelper->responseDatos($mensaje);
     }
 }

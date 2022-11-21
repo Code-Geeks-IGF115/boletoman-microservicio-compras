@@ -174,9 +174,9 @@ class CompraController extends AbstractController
             // defining data using an array of parameters
             'json' => ['idsDetallesCompra' => $idsDetalleCompras],
         ]);
-        // $resultadosDeConsulta=$response->toArray();
-        //retornar eventos que pertenecen a disponibilidades que tienen los id detalles compra encontrados
-        return $response;
+        $eventos=$response->toArray()["eventos"];
+//         retornar eventos que pertenecen a disponibilidades que tienen los id detalles compra encontrados
+        return $this->responseHelper->responseDatos(["eventos"=>$eventos]);
     }
 
 

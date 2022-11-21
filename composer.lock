@@ -1976,6 +1976,7 @@
             "time": "2022-09-13T10:33:30+00:00"
         },
         {
+
             "name": "nelmio/cors-bundle",
             "version": "2.2.0",
             "source": {
@@ -2037,6 +2038,7 @@
             "time": "2021-12-01T09:34:27+00:00"
         },
         {
+
             "name": "nikic/php-parser",
             "version": "v4.15.1",
             "source": {

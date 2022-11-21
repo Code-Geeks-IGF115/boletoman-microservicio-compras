@@ -161,7 +161,11 @@ class CompraController extends AbstractController
     {
         $mensaje="Hola Mundo!";
         $compras = $detalleCompraRepository->findBy(['compra' => $idCompra]);
-        //dd($compras);
+        //dd($compras[0]->getId());
+        $idsDetalleCompra = [];
+        foreach ($compras as $key => $value) {
+            $idsDetalleCompra[] = $compras[$key]->getId();
+        }
         
         try{
             // recibiendo parametros
@@ -173,12 +177,13 @@ class CompraController extends AbstractController
                 'POST', 
                 'https://boletoman-reservaciones-aa.herokuapp.com/disponibilidad/mis/boletos', [
                 // defining data using an array of parameters
-                'json' => ['vista: ' =>$compras] ,
+                'json' => ['idDetalleCompra' => $idsDetalleCompra] ,
             ]);
             $resultadosDeConsulta=$response->toArray();
+            //dd($resultadosDeConsulta);
             $mensaje=$resultadosDeConsulta;
         }catch(Exception $e){
-            return $this->responseHelper->responseDatosNoValidos($e->getMessage());  
+            return $this->responseHelper->responseDatosNoValidos($e);  
         }
 
         return $this->responseHelper->responseDatos($resultadosDeConsulta);     

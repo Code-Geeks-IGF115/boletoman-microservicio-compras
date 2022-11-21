@@ -223,7 +223,7 @@ class CompraController extends AbstractController
                 'POST', 
                 'https://boletoman-reservaciones-aa.herokuapp.com/disponibilidad/mis/boletos', [
                 // defining data using an array of parameters
-                'json' => ['idDetalleCompra' => $idsDetalleCompra] ,
+                'json' => $idsDetalleCompra
             ]);
             $resultadosDeConsulta=$response->toArray();
             //dd($resultadosDeConsulta);

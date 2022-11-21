@@ -6,13 +6,12 @@ namespace App\Controller;
 use App\Entity\{Compra, DetalleCompra};
 
 use App\Form\CompraType;
-use App\Repository\CompraRepository;
+use App\Repository\{CompraRepository, DetalleCompraRepository};
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\{Response, JsonResponse};
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
-use App\Repository\DetalleCompraRepository;
 use App\Service\ResponseHelper;
 use Exception;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -21,8 +20,6 @@ use Nelmio\CorsBundle;
 #[Route('/compra')]
 class CompraController extends AbstractController
 {
-
-
     private ResponseHelper $responseHelper;
     private $client;
 
@@ -158,6 +155,7 @@ class CompraController extends AbstractController
         return $this->responseHelper->responseMessage($mensaje);     
     }
 
+
    
     //recibiendo de microservicio reservaciones.
     #[Route('/mis/eventos/{idUsuario}', name: 'consulta_idUsuario', methods: ['GET'])]
@@ -176,5 +174,35 @@ class CompraController extends AbstractController
         return $response;
     }
 
+
+
+    #[Route('/{idCompra}/boletos/pdf', name: 'boletos_cliente', methods: ['POST'])]
+    public function boletos(DetalleCompraRepository $detalleCompraRepository,
+    $idCompra): JsonResponse
+    {
+        $mensaje="Hola Mundo!";
+        $compras = $detalleCompraRepository->findBy(['compra' => $idCompra]);
+        //dd($compras);
+        
+        /*try{
+            // recibiendo parametros
+            //SOY SERVIDOR
+            //$parametros=$request->toArray(); 
+            //$miNombre=$parametros["nombreCompleto"];
+            // contruyendo cliente - AGREGACIÓN - TAMBIÉN SOY CLIENTE
+            $response = $this->client->request(
+                'POST', 
+                'https://boletoman-reservaciones.herokuapp.com/sala/de/eventos/ejemplo/servidor', [
+                // defining data using an array of parameters
+                'json' => ['miNombre' => $idCompra],
+            ]);
+            $resultadosDeConsulta=$response->toArray();
+            $mensaje=$resultadosDeConsulta["message"];
+        }catch(Exception $e){
+            return $this->responseHelper->responseDatosNoValidos($mensaje);  
+        }*/
+
+        return $this->responseHelper->responseDatos($compras, ['ver_boletos']);     
+    }
 
 }

@@ -142,7 +142,7 @@ class CompraController extends AbstractController
             // contruyendo cliente - AGREGACIÓN - TAMBIÉN SOY CLIENTE
             $response = $this->client->request(
                 'POST', 
-                'https://boletoman-reservaciones.herokuapp.com/sala/de/eventos/ejemplo/servidor', [
+                'https://boletoman-reservaciones.herokuapp.com', [
                 // defining data using an array of parameters
                 'json' => ['miNombre' => $miNombre],
             ]);
@@ -155,15 +155,15 @@ class CompraController extends AbstractController
         return $this->responseHelper->responseMessage($mensaje);     
     }
 
-    #[Route('/{idCompra}/boletos/pdf', name: 'boletos_cliente', methods: ['GET', 'POST'])]
-    public function boletos(DetalleCompraRepository $detalleCompraRepository,
+    #[Route('/{idCompra}/boletos/pdf', name: 'buscar_compras', methods: ['POST'])]
+    public function buscarCompras(DetalleCompraRepository $detalleCompraRepository,
     $idCompra): JsonResponse
     {
         $mensaje="Hola Mundo!";
         $compras = $detalleCompraRepository->findBy(['compra' => $idCompra]);
         //dd($compras);
         
-        /*try{
+        try{
             // recibiendo parametros
             //SOY SERVIDOR
             //$parametros=$request->toArray(); 
@@ -171,16 +171,16 @@ class CompraController extends AbstractController
             // contruyendo cliente - AGREGACIÓN - TAMBIÉN SOY CLIENTE
             $response = $this->client->request(
                 'POST', 
-                'https://boletoman-reservaciones.herokuapp.com/sala/de/eventos/ejemplo/servidor', [
+                'https://boletoman-reservaciones-aa.herokuapp.com/disponibilidad/mis/boletos', [
                 // defining data using an array of parameters
-                'json' => ['miNombre' => $idCompra],
+                'json' => ['vista: ' =>$compras] ,
             ]);
             $resultadosDeConsulta=$response->toArray();
-            $mensaje=$resultadosDeConsulta["message"];
+            $mensaje=$resultadosDeConsulta;
         }catch(Exception $e){
-            return $this->responseHelper->responseDatosNoValidos($mensaje);  
-        }*/
+            return $this->responseHelper->responseDatosNoValidos($e->getMessage());  
+        }
 
-        return $this->responseHelper->responseDatos("si funciona");     
+        return $this->responseHelper->responseDatos($resultadosDeConsulta);     
     }
 }

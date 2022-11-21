@@ -14,6 +14,7 @@ class DetalleCompra
     #[Groups(['mis_eventos'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
+    #[Groups(['ver_boletos'])]
     #[ORM\Column]
     private ?int $id = null;
     

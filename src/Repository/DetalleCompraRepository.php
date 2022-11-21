@@ -43,7 +43,7 @@ class DetalleCompraRepository extends ServiceEntityRepository
    {
     $entityManager = $this->getEntityManager();
     $query = $entityManager->createQuery(
-        'SELECT detalleCompra
+        'SELECT detalleCompra.id
         FROM App\Entity\DetalleCompra detalleCompra
         JOIN detalleCompra.compra  compra
         where compra.idUsuario = :idUsuario'

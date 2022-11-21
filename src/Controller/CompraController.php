@@ -155,6 +155,27 @@ class CompraController extends AbstractController
         return $this->responseHelper->responseMessage($mensaje);     
     }
 
+
+   
+    //recibiendo de microservicio reservaciones.
+    #[Route('/mis/eventos/{idUsuario}', name: 'consulta_idUsuario', methods: ['GET'])]
+    public function misEventos($idUsuario, DetalleCompraRepository $detalleCompraRepository)
+    {
+        $idsDetalleCompras=$detalleCompraRepository->findByUsuario($idUsuario);
+        //cliente consulta a microservicio reservaciones
+        $response = $this->client->request(
+            'POST', 
+            'https://boletoman-reservaciones.herokuapp.com/disponibilidad/mis/eventos/', [
+            // defining data using an array of parameters
+            'json' => ['idsDetallesCompra' => $idsDetalleCompras],
+        ]);
+        // $resultadosDeConsulta=$response->toArray();
+        //retornar eventos que pertenecen a disponibilidades que tienen los id detalles compra encontrados
+        return $response;
+    }
+
+
+
     #[Route('/{idCompra}/boletos/pdf', name: 'boletos_cliente', methods: ['POST'])]
     public function boletos(DetalleCompraRepository $detalleCompraRepository,
     $idCompra): JsonResponse
@@ -183,4 +204,5 @@ class CompraController extends AbstractController
 
         return $this->responseHelper->responseDatos($compras, ['ver_boletos']);     
     }
+
 }

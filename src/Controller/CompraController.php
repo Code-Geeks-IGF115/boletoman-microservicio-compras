@@ -167,13 +167,15 @@ class CompraController extends AbstractController
             $idsDetalleCompras[]=$detalleCompra["id"];
         }
         //cliente consulta a microservicio reservaciones
-        // dd();
+        // dd(['idsDetallesCompra' => $idsDetalleCompras]);
         $response = $this->client->request(
             'GET', 
             'https://boletoman-reservaciones.herokuapp.com/disponibilidad/mis/eventos/', [
             // defining data using an array of parameters
             'json' => ['idsDetallesCompra' => $idsDetalleCompras],
-        ]);
+            'timeout' => 90
+            ]
+        );
         $eventos=$response->toArray()["eventos"];
 //         retornar eventos que pertenecen a disponibilidades que tienen los id detalles compra encontrados
         return $this->responseHelper->responseDatos(["eventos"=>$eventos]);

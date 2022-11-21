@@ -14,8 +14,6 @@ use Symfony\Component\Serializer\SerializerInterface;
 use App\Service\ResponseHelper;
 use Exception;
 
-use Symfony\Contracts\HttpClient\HttpClientInterface;
-
 use Nelmio\CorsBundle;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 

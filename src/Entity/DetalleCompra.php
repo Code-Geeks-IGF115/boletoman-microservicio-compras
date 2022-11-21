@@ -11,16 +11,17 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: DetalleCompraRepository::class)]
 class DetalleCompra
 {
+    #[Groups(['mis_eventos'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
     
-    #[Groups(['ver_detallecompra','ver_compra'])]
+    #[Groups(['ver_detallecompra','ver_compra', 'ver_boletos'])]
     #[ORM\Column]
     private ?int $cantidad = null;
 
-    #[Groups(['ver_detallecompra','ver_compra'])]
+    #[Groups(['ver_detallecompra','ver_compra', 'ver_boletos'])]
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2)]
     private ?string $total = null;
 
@@ -29,10 +30,13 @@ class DetalleCompra
     private ?string $descripcion = null;
 
     #[ORM\ManyToOne(inversedBy: 'detalleCompras')]
+    #[Groups(['ver_boletos'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Compra $compra = null;
 
+
     public function __construct(){}
+
 
     public function getId(): ?int
     {

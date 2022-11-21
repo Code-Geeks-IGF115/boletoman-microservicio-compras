@@ -39,6 +39,18 @@ class DetalleCompraRepository extends ServiceEntityRepository
         }
     }
 
+    public function findByUsuario($idUsuario): array
+   {
+    $entityManager = $this->getEntityManager();
+    $query = $entityManager->createQuery(
+        'SELECT detalleCompra.id
+        FROM App\Entity\DetalleCompra detalleCompra
+        JOIN detalleCompra.compra  compra
+        where compra.idUsuario = :idUsuario'
+    )->setParameter('idUsuario', $idUsuario);
+
+    return $query->getResult();
+   }
 //    /**
 //     * @return DetalleCompra[] Returns an array of DetalleCompra objects
 //     */

@@ -5,15 +5,17 @@ namespace App\Controller;
 
 use App\Entity\{Compra, DetalleCompra};
 use App\Form\CompraType;
-use App\Repository\CompraRepository;
+use App\Repository\{CompraRepository, DetalleCompraRepository};
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\{Response, JsonResponse};
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
-use App\Repository\DetalleCompraRepository;
 use App\Service\ResponseHelper;
 use Exception;
+
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+
 use Nelmio\CorsBundle;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -21,12 +23,12 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 #[Route('/compra')]
 class CompraController extends AbstractController
 {
-
-
     private ResponseHelper $responseHelper;
     private $client;
 
-    public function __construct(ResponseHelper $responseHelper, HttpClientInterface $client)
+
+    public function __construct(ResponseHelper $responseHelper,HttpClientInterface $client)
+
     {
         $this->responseHelper=$responseHelper;
         $this->client = $client;
@@ -146,5 +148,89 @@ class CompraController extends AbstractController
         return $this->redirectToRoute('app_compra_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    
+
+    #[Route('/ejemplo/cliente', name: 'ejemplo_cliente', methods: ['POST'])]
+    public function ejemploCliente(Request $request): JsonResponse
+    {
+        $mensaje="Hola Mundo!";
+        
+        try{
+            // recibiendo parametros
+            //SOY SERVIDOR
+            $parametros=$request->toArray(); 
+            $miNombre=$parametros["nombreCompleto"];
+            // contruyendo cliente - AGREGACIÓN - TAMBIÉN SOY CLIENTE
+            $response = $this->client->request(
+                'POST', 
+                'https://boletoman-reservaciones.herokuapp.com/sala/de/eventos/ejemplo/servidor', [
+                // defining data using an array of parameters
+                'json' => ['miNombre' => $miNombre],
+            ]);
+            $resultadosDeConsulta=$response->toArray();
+            $mensaje=$resultadosDeConsulta["message"];
+        }catch(Exception $e){
+            return $this->responseHelper->responseDatosNoValidos($mensaje);  
+        }
+
+        return $this->responseHelper->responseMessage($mensaje);     
+    }
+
+
+   
+    //recibiendo de microservicio reservaciones.
+    #[Route('/mis/eventos/{idUsuario}', name: 'consulta_idUsuario', methods: ['GET'])]
+    public function misEventos($idUsuario, DetalleCompraRepository $detalleCompraRepository)
+    {
+        $detalleCompras=$detalleCompraRepository->findByUsuario($idUsuario);
+        $idsDetalleCompras=[];
+        foreach ($detalleCompras as $key => $detalleCompra) {
+            $idsDetalleCompras[]=$detalleCompra["id"];
+        }
+        //cliente consulta a microservicio reservaciones
+        // dd(['idsDetallesCompra' => $idsDetalleCompras]);
+        $response = $this->client->request(
+            'GET', 
+            'https://boletoman-reservaciones.herokuapp.com/disponibilidad/mis/eventos/', [
+            // defining data using an array of parameters
+            'json' => ['idsDetallesCompra' => $idsDetalleCompras],
+            'timeout' => 90
+            ]
+        );
+        $eventos=$response->toArray()["eventos"];
+//         retornar eventos que pertenecen a disponibilidades que tienen los id detalles compra encontrados
+        return $this->responseHelper->responseDatos(["eventos"=>$eventos]);
+    }
+
+
+
+    #[Route('/{idCompra}/boletos/pdf', name: 'boletos_cliente', methods: ['POST'])]
+    public function boletos(DetalleCompraRepository $detalleCompraRepository,
+    $idCompra): JsonResponse
+    {
+        $mensaje="Hola Mundo!";
+        $compras = $detalleCompraRepository->findBy(['compra' => $idCompra]);
+        //dd($compras);
+        
+        /*try{
+            // recibiendo parametros
+            //SOY SERVIDOR
+            //$parametros=$request->toArray(); 
+            //$miNombre=$parametros["nombreCompleto"];
+            // contruyendo cliente - AGREGACIÓN - TAMBIÉN SOY CLIENTE
+            $response = $this->client->request(
+                'POST', 
+                'https://boletoman-reservaciones.herokuapp.com/sala/de/eventos/ejemplo/servidor', [
+                // defining data using an array of parameters
+                'json' => ['miNombre' => $idCompra],
+            ]);
+            $resultadosDeConsulta=$response->toArray();
+            $mensaje=$resultadosDeConsulta["message"];
+        }catch(Exception $e){
+            return $this->responseHelper->responseDatosNoValidos($mensaje);  
+        }*/
+
+        return $this->responseHelper->responseDatos($compras, ['ver_boletos']);     
+    }
+
 }
+

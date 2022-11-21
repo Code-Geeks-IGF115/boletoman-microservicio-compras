@@ -169,7 +169,7 @@ class CompraController extends AbstractController
         //cliente consulta a microservicio reservaciones
         // dd();
         $response = $this->client->request(
-            'POST', 
+            'GET', 
             'https://boletoman-reservaciones.herokuapp.com/disponibilidad/mis/eventos/', [
             // defining data using an array of parameters
             'json' => ['idsDetallesCompra' => $idsDetalleCompras],

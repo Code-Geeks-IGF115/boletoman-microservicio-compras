@@ -1,7 +1,6 @@
 
 
 <html>
-<?php
     <head>
         <meta charset="UTF-8">
         <title>Detalles de compra</title>
@@ -30,7 +29,6 @@
                     <td>{{ compra.precioUnitario }}</td>
                     <p>&nbsp;&nbsp;</p>
                     <td>{{ compra.importe }}</td>
-                    
 
                 </tr>
                 {% else %}
@@ -41,5 +39,4 @@
             </tbody>
         </table>
     </body>
-?>
 </html>

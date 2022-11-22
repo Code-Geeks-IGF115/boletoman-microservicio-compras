@@ -1,0 +1,41 @@
+
+
+<html>
+<?php
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Detalles de compra</title>
+    </head>
+    <body>
+        <h1>Detalle de Compra</h1>
+        <table>
+            <thead>
+                <tr> <br>
+                    <th>#</th>
+                    <th>Nombre<br>categoria</th>
+                    <p>&nbsp;&nbsp;</p>
+                    <th>Cantidad <br>de butacas </th>
+                    <p>&nbsp;&nbsp;</p>
+                    <th>Precio <br>unitario </th>
+                    <p>&nbsp;&nbsp;</p>
+                    <th>Importe</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                echo'<tr>';
+                foreach ($detalles as $key){
+                
+                    echo"<td>{ $key }</td>";
+                        
+                
+                }   
+                
+                </tr>
+            </tbody>
+        </table>
+    </body>
+
+?>
+</html>

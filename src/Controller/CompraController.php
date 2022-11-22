@@ -13,6 +13,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use App\Service\ResponseHelper;
 use Exception;
+use Dompdf\Dompdf;
+use Dompdf\Exception as DomException;
+use Dompdf\Options;
 
 use Nelmio\CorsBundle;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -201,7 +204,7 @@ class CompraController extends AbstractController
     }
 
 
-    #[Route('/{idCompra}/boletos/pdf', name: 'buscar_compras', methods: ['POST'])]
+    #[Route('/{idCompra}/boletos/pdf', name: 'buscar_compras', methods: ['POST', 'GET'])]
     public function buscarCompras(DetalleCompraRepository $detalleCompraRepository,
     $idCompra): JsonResponse
     {
@@ -212,7 +215,7 @@ class CompraController extends AbstractController
         foreach ($compras as $key => $value) {
             $idsDetalleCompra[] = $compras[$key]->getId();
         }
-        
+        /*
         try{
             // recibiendo parametros
             //SOY SERVIDOR
@@ -230,11 +233,73 @@ class CompraController extends AbstractController
             $mensaje=$resultadosDeConsulta;
         }catch(Exception $e){
             return $this->responseHelper->responseDatosNoValidos($e);  
+        }*/
+        //simulando lo que devuelve la variable response
+        $retornoResponse = [
+            [
+              "id" => 300,
+              "disponible" => "Disponible",
+              "idEvento"=> 40,
+              "idDetalleCompra" => 20,
+              "idButaca" => 267,
+              "codigoButaca" => "3:pr2",
+              "idCelda"=> 69,
+              "idCategoriaButaca"=> 12,
+              "nombreCategoria" => "Prueba2"
+            ],
+            [
+              "id" => 301,
+              "disponible"=> "Disponible",
+              "idEvento"=> 40,
+              "idDetalleCompra" => 21,
+              "idButaca"=> 268,
+              "codigoButaca"=> "4:pr2",
+              "idCelda"=> 69,
+              "idCategoriaButaca"=> 12,
+              "nombreCategoria" => "Prueba2"
+            ],
+            [
+              "id"=> 302,
+              "disponible"=> "Disponible",
+              "idEvento"=> 40,
+              "idDetalleCompra"=> 22,
+              "idButaca"=> 269,
+              "codigoButaca"=> "5:pr2",
+              "idCelda"=> 69,
+              "idCategoriaButaca"=> 12,
+              "nombreCategoria" => "Prueba2"
+            ]
+        ];
+        //datos total para detalle compra
+        $detalles =[];
+        foreach ($retornoResponse as $key => $value) {
+            $detalles[]=[
+                "nombreCategoria" => $retornoResponse[$key]["nombreCategoria"],
+                "cantidadDeButacas" =>$compras[$key]->getCantidad(),
+                "precioUnitario" => $compras[$key]->getTotal(),
+                "importe" =>$compras[$key]->getCantidad()*intval($compras[$key]->getTotal()),    
+            ];
         }
+/*
+        $html = $this->renderView('reports/boletos.html.twing', [
+            'detalles' => $detalles
+        ]);
 
-        return $this->responseHelper->responseDatos($resultadosDeConsulta);     
+        $opciones = new Options();
+        $opciones->set('defaultFont', 'Arial');
 
+        $pdf = new Dompdf();
+        $pdf->loadHtml($html);
+        $pdf->setPaper('A4', 'landscape');
+        $pdf->render();
+        $pdf->stream("mypdf.pdf", [
+            "Attachment" => false
+        ]);*/
+
+
+        return $this->responseHelper->responseDatos($detalles);     
     }
+
 
 }
 

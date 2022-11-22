@@ -14,8 +14,8 @@ class Compra
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
     #[Groups(['ver_compra', 'ver_boletos'])]
+    #[ORM\Column]
     private ?int $id = null;
 
     #[Groups(['ver_compra'])]

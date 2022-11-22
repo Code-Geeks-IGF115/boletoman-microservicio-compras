@@ -277,7 +277,7 @@ class CompraController extends AbstractController
                 "nombreCategoria" => $retornoResponse[$key]["nombreCategoria"],
                 "cantidadDeButacas" =>$compras[$key]->getCantidad(),
                 "precioUnitario" => $compras[$key]->getTotal(),
-                "importe" =>$compras[$key]->getCantidad()*intval($compras[$key]->getTotal()),    
+                "importe" =>$compras[$key]->getCantidad()*intval($compras[$key]->getTotal())    
             ];
         }
 

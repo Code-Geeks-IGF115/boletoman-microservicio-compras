@@ -280,7 +280,7 @@ class CompraController extends AbstractController
                 "importe" =>$compras[$key]->getCantidad()*intval($compras[$key]->getTotal()),    
             ];
         }
-/*
+
         $html = $this->renderView('reports/boletos.html.twing', [
             'detalles' => $detalles
         ]);
@@ -294,7 +294,7 @@ class CompraController extends AbstractController
         $pdf->render();
         $pdf->stream("mypdf.pdf", [
             "Attachment" => false
-        ]);*/
+        ]);
 
 
         return $this->responseHelper->responseDatos($detalles);     

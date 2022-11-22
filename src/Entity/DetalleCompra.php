@@ -11,10 +11,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: DetalleCompraRepository::class)]
 class DetalleCompra
 {
-    #[Groups(['mis_eventos'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[Groups(['ver_boletos'])]
+    #[Groups(['ver_boletos', 'mis_eventos'])]
     #[ORM\Column]
     private ?int $id = null;
     

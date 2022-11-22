@@ -1,0 +1,42 @@
+
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Detalles de compra</title>
+    </head>
+    <body>
+        <h1>Detalle de Compra</h1>
+        <table>
+            <thead>
+                <tr> 
+                    <th>Nombre<br>categoria</th>
+                    <p>&nbsp;&nbsp;</p>
+                    <th>Cantidad <br>de butacas </th>
+                    <p>&nbsp;&nbsp;</p>
+                    <th>Precio <br>unitario </th>
+                    <p>&nbsp;&nbsp;</p>
+                    <th>Importe</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for compra in detalles %}
+                <tr>
+                    <td>{{ compra.nombreCategoria }}</td>
+                    <p>&nbsp;&nbsp;</p>
+                    <td>{{ compra.cantidadDeButacas }}</td>
+                    <p>&nbsp;&nbsp;</p>
+                    <td>{{ compra.precioUnitario }}</td>
+                    <p>&nbsp;&nbsp;</p>
+                    <td>{{ compra.importe }}</td>
+
+                </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="3">no records found</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</html>

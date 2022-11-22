@@ -293,7 +293,7 @@ class CompraController extends AbstractController
         $pdf->setPaper('A4', 'landscape');
         $pdf->render();
         $pdf->stream("mypdf.pdf", [
-            "Attachment" => false
+            "Attachment" => true
         ]);
 
 
